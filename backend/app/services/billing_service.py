@@ -115,7 +115,11 @@ class BillingService:
         else:
             fp = db.query(FeePlan).filter_by(center_id=center_id).first()
         if not fp:
-            return []
+            from fastapi import HTTPException
+            raise HTTPException(
+                status_code=400,
+                detail="No fee plan found. Please create a fee plan first before generating invoices."
+            )
 
         children = db.query(Child).filter(
             Child.center_id == center_id,

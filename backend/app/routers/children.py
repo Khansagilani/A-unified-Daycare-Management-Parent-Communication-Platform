@@ -160,7 +160,7 @@ def delete_child(
 def add_authorized_pickup(
     child_id: UUID,
     pickup_data: AuthorizedPickupCreate,
-    current_user: User = Depends(require_role(["ADMIN", "STAFF"])),
+    current_user: User = Depends(require_role(["ADMIN", "STAFF", "PARENT"])),
     db: Session = Depends(get_db)
 ):
     """Add authorized pickup person"""
@@ -204,7 +204,7 @@ def remove_authorized_pickup(
 def add_emergency_contact(
     child_id: UUID,
     contact_data: EmergencyContactCreate,
-    current_user: User = Depends(require_role(["ADMIN"])),
+    current_user: User = Depends(require_role(["ADMIN", "STAFF", "PARENT"])),
     db: Session = Depends(get_db)
 ):
     """Add emergency contact"""
@@ -234,7 +234,7 @@ def get_emergency_contacts(
 def add_allergy(
     child_id: UUID,
     allergy_data: AllergyCreate,
-    current_user: User = Depends(require_role(["ADMIN", "STAFF"])),
+    current_user: User = Depends(require_role(["ADMIN", "STAFF", "PARENT"])),
     db: Session = Depends(get_db)
 ):
     """Add allergy"""
@@ -278,7 +278,7 @@ def remove_allergy(
 def add_fear(
     child_id: UUID,
     fear_data: ChildFearCreate,
-    current_user: User = Depends(require_role(["ADMIN", "STAFF"])),
+    current_user: User = Depends(require_role(["ADMIN", "STAFF", "PARENT"])),
     db: Session = Depends(get_db)
 ):
     """Add child fear"""
@@ -321,7 +321,7 @@ def remove_fear(
 def add_interest(
     child_id: UUID,
     interest_data: ChildInterestCreate,
-    current_user: User = Depends(require_role(["ADMIN", "STAFF"])),
+    current_user: User = Depends(require_role(["ADMIN", "STAFF", "PARENT"])),
     db: Session = Depends(get_db)
 ):
     """Add child interest"""
@@ -352,7 +352,7 @@ def get_interests(
 def add_routine(
     child_id: UUID,
     routine_data: ChildRoutineCreate,
-    current_user: User = Depends(require_role(["ADMIN", "STAFF"])),
+    current_user: User = Depends(require_role(["ADMIN", "STAFF", "PARENT"])),
     db: Session = Depends(get_db)
 ):
     """Add or update child routine"""
@@ -381,7 +381,7 @@ def get_routines(
 def update_personality(
     child_id: UUID,
     personality_data: ChildPersonalityCreate,
-    current_user: User = Depends(require_role(["ADMIN", "STAFF"])),
+    current_user: User = Depends(require_role(["ADMIN", "STAFF", "PARENT"])),
     db: Session = Depends(get_db)
 ):
     """Update child personality profile"""
@@ -413,7 +413,7 @@ def get_personality(
 def update_food_profile(
     child_id: UUID,
     food_data: ChildFoodProfileCreate,
-    current_user: User = Depends(require_role(["ADMIN", "STAFF"])),
+    current_user: User = Depends(require_role(["ADMIN", "STAFF", "PARENT"])),
     db: Session = Depends(get_db)
 ):
     """Update child food profile"""
@@ -445,7 +445,7 @@ def get_food_profile(
 def update_development(
     child_id: UUID,
     dev_data: ChildDevelopmentCreate,
-    current_user: User = Depends(require_role(["ADMIN", "STAFF"])),
+    current_user: User = Depends(require_role(["ADMIN", "STAFF", "PARENT"])),
     db: Session = Depends(get_db)
 ):
     """Update child development profile"""
@@ -477,7 +477,7 @@ def get_development(
 def update_emotional_support_plan(
     child_id: UUID,
     esp_data: EmotionalSupportPlanCreate,
-    current_user: User = Depends(require_role(["ADMIN", "STAFF"])),
+    current_user: User = Depends(require_role(["ADMIN", "STAFF", "PARENT"])),
     db: Session = Depends(get_db)
 ):
     """Update child emotional support plan"""
