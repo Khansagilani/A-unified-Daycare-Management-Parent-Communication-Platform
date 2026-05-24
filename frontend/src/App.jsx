@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate } from 'react-router-dom'
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import { useEffect } from 'react'
 import axios from 'axios'
 import ErrorBoundary from './components/ErrorBoundary'
@@ -29,20 +29,14 @@ import AdminLinkRequests from './pages/AdminLinkRequests'
 import AdminStaffAttendance from './pages/AdminStaffAttendance'
 import NotificationsPage from './pages/NotificationsPage'
 
-// Redirect logged-in users to their dashboard, otherwise show login
+// Only skip the login page if already logged in as the SAME role being requested.
+// A logged-in admin visiting /login?role=staff sees the login page so they can switch accounts.
 function LoginGuard({ children }) {
     const { user } = useAuth()
-    if (user?.role === 'ADMIN') return <Navigate to="/admin" replace />
-    if (user?.role === 'STAFF') return <Navigate to="/staff" replace />
-    if (user?.role === 'PARENT') return <Navigate to="/parent" replace />
-    return children
-}
-
-// Show role dashboard if logged in and correct role, otherwise show login
-function PortalGuard({ role, children }) {
-    const { user } = useAuth()
-    if (!user) return children   // e.g. staff login page shown
-    if (user.role !== role) return <Navigate to="/" replace />
+    const location = useLocation()
+    const roleParam = new URLSearchParams(location.search).get('role')?.toUpperCase()
+    if (user?.role === 'STAFF' && roleParam === 'STAFF') return <Navigate to="/staff" replace />
+    if (user?.role === 'PARENT' && roleParam === 'PARENT') return <Navigate to="/parent" replace />
     return children
 }
 
@@ -68,13 +62,13 @@ export default function App() {
                 <Route path="/register" element={<ParentRegister />} />
 
                 {/* Staff Routes */}
-                <Route path="/staff" element={<PortalGuard role="STAFF"><StaffDashboard /></PortalGuard>} />
+                <Route path="/staff" element={<ProtectedRoute role="STAFF"><StaffDashboard /></ProtectedRoute>} />
                 <Route path="/staff/attendance" element={<ProtectedRoute role="STAFF"><Attendance /></ProtectedRoute>} />
                 <Route path="/staff/daily-log" element={<ProtectedRoute role="STAFF"><DailyLog /></ProtectedRoute>} />
                 <Route path="/staff/messages" element={<ProtectedRoute role="STAFF"><StaffMessages /></ProtectedRoute>} />
 
                 {/* Parent Routes */}
-                <Route path="/parent" element={<PortalGuard role="PARENT"><ParentDashboard /></PortalGuard>} />
+                <Route path="/parent" element={<ProtectedRoute role="PARENT"><ParentDashboard /></ProtectedRoute>} />
                 <Route path="/parent/feed" element={<ProtectedRoute role="PARENT"><ChildFeed /></ProtectedRoute>} />
                 <Route path="/parent/messages" element={<ProtectedRoute role="PARENT"><ParentMessages /></ProtectedRoute>} />
 
